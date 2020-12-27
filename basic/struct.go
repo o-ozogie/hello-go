@@ -3,12 +3,24 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"time"
 )
 
 // 구조체 정의, 구조체는 struct 필드만을 가지며, 메서드는 분리하여 정의한다.
 type person struct {
 	name string
 	age int
+}
+
+// 구조체 임베딩, 다른 구조체를 구조체 안에 포함할 수 있다.
+type korean struct {
+	person
+	idCard
+}
+
+type idCard struct {
+	id string
+	createdAt time.Time
 }
 
 func newPerson() (pAddress *person) {
@@ -47,4 +59,8 @@ func main() {
 	// 생성자 함수, 구조체를 초기화해주는 함수
 	p3 := newPerson()
 	fmt.Println(*p3) // {이름을 입력해주세요 100}
+
+	// 임베딩된 구조체 객체 생성
+	k := korean{person{name: "정우영", age: 18}, idCard{id: "abc-123", createdAt: time.Now()}}
+	fmt.Println(k) // {{정우영 18} {abc-123 {13831097587071554136 118856 0x116df40}}}
 }
