@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"hello-go/CRUD/exception"
+	"log"
 	"os"
 	"strconv"
 	"sync"
@@ -54,13 +54,13 @@ func (database *Database) Connect() {
 
 	connection, e = gorm.Open(mysql.Open(database.databaseUrl()), &gorm.Config{})
 	if e != nil {
-		exception.Raise(e)
+		log.Panic(e)
 	}
 }
 
 func (database Database) Migrate() {
 	e := connection.AutoMigrate(new(User), new(Post), new(Comment))
 	if e != nil {
-		exception.Raise(e)
+		log.Panic(e)
 	}
 }
