@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/valyala/fasthttp"
+	"hello-go/CRUD/exception"
 )
 
 type Middleware func(ctx *fasthttp.RequestCtx) error
@@ -20,6 +21,18 @@ func Filter(middlewares []Middleware, handler fasthttp.RequestHandler) fasthttp.
 				return
 			}
 		}
+		defer ErrorHandle(ctx)
 		handler(ctx)
+	}
+}
+
+func ErrorHandle(ctx *fasthttp.RequestCtx) {
+	if r := recover(); r != nil {
+		x, e := exception.ToException(r.(string))
+		if e != nil {
+			exception.RaiseException(ctx, exception.InternalServerError())
+			return
+		}
+		exception.RaiseException(ctx, x)
 	}
 }
